@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    tags: [ 'v*' ]
+
+jobs:
+  release:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Swift
+      uses: swift-actions/setup-swift@v1
+      with:
+        swift-version: "6.2"
+        
+    - name: Build
+      run: swift build -c release
+      
+    - name: Create release binary
+      run: |
+        cp .build/release/pastedown ./pastedown
+        chmod +x ./pastedown
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: ./pastedown
+        name: pastedown ${{ github.ref_name }}
+        tag_name: ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Update Homebrew Formula
+      run: |
+        # Extract version from tag
+        VERSION=${GITHUB_REF#refs/tags/v}
+        
+        # Calculate SHA256 of the binary
+        SHA256=$(shasum -a 256 ./pastedown | cut -d' ' -f1)
+        
+        # Create updated formula
+        cat > pastedown.rb << EOF
+        class Pastedown < Formula
+          desc "macOS Pasteboard to Markdown"
+          homepage "https://github.com/cloudygreybeard/pastedown"
+          url "https://github.com/cloudygreybeard/pastedown/releases/download/v${VERSION}/pastedown"
+          sha256 "${SHA256}"
+          version "${VERSION}"
+          license "Apache-2.0"
+          
+          depends_on :macos
+          
+          def install
+            bin.install "pastedown"
+          end
+          
+          test do
+            system "#{bin}/pastedown", "--version"
+          end
+        end
+        EOF
+        
+        echo "Updated formula for version ${VERSION} with SHA256 ${SHA256}"
+        
+    - name: Upload Formula
+      uses: actions/upload-artifact@v4
+      with:
+        name: homebrew-formula
+        path: pastedown.rb
+        retention-days: 30
