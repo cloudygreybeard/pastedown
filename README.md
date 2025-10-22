@@ -8,25 +8,25 @@ The tool provides fine-grained control over source selection, content merging, a
 
 ## Installation
 
-### Binary Download (Recommended)
+### Homebrew (Recommended)
 
-Download the latest release binary from [GitHub Releases](https://github.com/cloudygreybeard/pastedown/releases). The binary is a universal binary that works on both Intel and Apple Silicon Macs:
+Install using Homebrew with automatic tap management:
+
+```bash
+brew install cloudygreybeard/tap/pastedown
+```
+
+This command automatically taps the repository and installs the universal binary (supports both Intel and Apple Silicon Macs). The tap is maintained at [cloudygreybeard/homebrew-tap](https://github.com/cloudygreybeard/homebrew-tap).
+
+### Binary Download
+
+Download the latest release binary from [GitHub Releases](https://github.com/cloudygreybeard/pastedown/releases):
 
 ```bash
 # Download and install
 curl -L https://github.com/cloudygreybeard/pastedown/releases/latest/download/pastedown -o /usr/local/bin/pastedown
 chmod +x /usr/local/bin/pastedown
 ```
-
-### Homebrew
-
-Install using the Homebrew tap (supports both Intel and Apple Silicon):
-
-```bash
-brew install cloudygreybeard/tap/pastedown
-```
-
-The Homebrew tap is maintained at [cloudygreybeard/homebrew-tap](https://github.com/cloudygreybeard/homebrew-tap).
 
 ## Basic Usage
 
