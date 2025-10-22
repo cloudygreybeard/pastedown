@@ -59,10 +59,10 @@ struct CLI {
         
         switch result {
         case .success(let markdown):
-            if options.paste {
-                writeToPasteboard(markdown)
-            } else {
+            if options.print {
                 print(markdown, terminator: "")
+            } else {
+                writeToPasteboard(markdown)
             }
         case .failure(let error):
             fprintln("Error: \(error)", to: .stderr)
@@ -93,8 +93,8 @@ struct CLI {
                 }
             case "--all":
                 options.showAll = true
-            case "--paste", "--copy":
-                options.paste = true
+            case "--print":
+                options.print = true
             default:
                 break
             }
@@ -109,7 +109,7 @@ struct CLI {
         var mergeTypes: [String]? = nil
         var separator: String = "\n\n"
         var showAll: Bool = false
-        var paste: Bool = false
+        var print: Bool = false  // Default is to paste, print only if explicitly requested
     }
     
     enum ConvertResult {
@@ -478,9 +478,9 @@ struct CLI {
         
         USAGE:
             pastedown [COMMAND]
-        
+
         COMMANDS:
-            (none)       Convert pasteboard to Markdown and print to stdout
+            (none)       Convert pasteboard to Markdown and put in pasteboard (default)
             inspect      Inspect pasteboard contents and show all available formats
             help         Show this help message
             version      Show version information
@@ -495,29 +495,29 @@ struct CLI {
             --merge TYPES         Merge multiple types (e.g., "html,text")
             --separator STRING    Separator for merged content (default: "\\n\\n")
             --all                 Show all available conversions
-            --paste, --copy       Put markdown output back into pasteboard
+            --print               Print markdown to stdout (default: put in pasteboard)
         
         EXAMPLES:
-            # Convert pasteboard to Markdown (default priority)
+            # Convert pasteboard to Markdown and put in pasteboard (default)
             pastedown
             
-            # Force HTML conversion
+            # Convert and print to stdout
+            pastedown --print
+            
+            # Force HTML conversion (puts in pasteboard)
             pastedown --from html
             
-            # Set custom priority
-            pastedown --priority rtf,html,text
+            # Set custom priority and print to stdout
+            pastedown --priority rtf,html,text --print
             
-            # Merge HTML and text
+            # Merge HTML and text (puts in pasteboard)
             pastedown --merge html,text
             
-            # Merge with custom separator
-            pastedown --merge html,text --separator "\\n---\\n"
+            # Merge with custom separator and print
+            pastedown --merge html,text --separator "\\n---\\n" --print
             
             # Show all conversions
             pastedown --all
-            
-            # Convert and put back in pasteboard
-            pastedown --paste
             
             # Inspect pasteboard
             pastedown inspect
