@@ -1,8 +1,10 @@
 name: Release
 
 on:
-  push:
-    tags: [ 'v*' ]
+  workflow_run:
+    workflows: ["Build, Test and Release"]
+    types: [completed]
+    branches: [main]
 
 jobs:
   release:
