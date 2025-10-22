@@ -8,22 +8,33 @@ The tool provides fine-grained control over source selection, content merging, a
 
 ## Installation
 
-### Homebrew (Recommended)
+### Development Build (Recommended)
+
+Since this is a private repository, the easiest way to install is to build from source:
 
 ```bash
-# Install from local tap
-brew install cloudygreybeard/pastedown/pastedown
+# Clone and build
+git clone https://github.com/cloudygreybeard/pastedown.git
+cd pastedown
+make build
+make install
 ```
 
-### Binary Download
+### Homebrew (Local Tap)
 
-Download the latest release binary from [GitHub Releases](https://github.com/cloudygreybeard/pastedown/releases):
+For Homebrew installation, you'll need to create a local tap first:
 
 ```bash
-# Download and install
-curl -L https://github.com/cloudygreybeard/pastedown/releases/latest/download/pastedown -o /usr/local/bin/pastedown
-chmod +x /usr/local/bin/pastedown
+# Create a local tap repository
+git clone https://github.com/cloudygreybeard/pastedown.git /opt/homebrew/Library/Taps/cloudygreybeard/homebrew-pastedown
+cd /opt/homebrew/Library/Taps/cloudygreybeard/homebrew-pastedown
+# Copy the formula to the correct location
+cp pastedown.rb Formula/pastedown.rb
+# Install
+brew install pastedown
 ```
+
+**Note**: This repository is currently private, so release assets are not publicly accessible. Use the development build method above for installation.
 
 ## Basic Usage
 
@@ -151,7 +162,7 @@ JSON output includes:
 ## Requirements
 
 - macOS 13.0+
-- Swift 6.2+ (Command Line Tools for Xcode)
+- Swift 5.9+ (Command Line Tools for Xcode)
 
 ## Development
 
