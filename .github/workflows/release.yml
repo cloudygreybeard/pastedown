@@ -1,10 +1,9 @@
+---
 name: Release
 
 on:
-  workflow_run:
-    workflows: ["Build, Test and Release"]
-    types: [completed]
-    branches: [main]
+  push:
+    tags: ['v*']
 
 jobs:
   release:
@@ -12,25 +11,25 @@ jobs:
     permissions:
       contents: write
       packages: write
-    
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
-      
+
     - name: Setup Swift
       run: |
         # Use the system Swift that comes with Xcode
         echo "Using system Swift version:"
         swift --version
-        
+
     - name: Build
       run: swift build -c release
-      
+
     - name: Create release binary
       run: |
         cp .build/release/pastedown ./pastedown
         chmod +x ./pastedown
-        
+
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
@@ -41,15 +40,15 @@ jobs:
         prerelease: false
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
+
     - name: Update Homebrew Formula
       run: |
         # Extract version from tag
         VERSION=${GITHUB_REF#refs/tags/v}
-        
+
         # Calculate SHA256 of the binary
         SHA256=$(shasum -a 256 ./pastedown | cut -d' ' -f1)
-        
+
         # Create updated formula
         cat > pastedown.rb << EOF
         class Pastedown < Formula
@@ -59,21 +58,21 @@ jobs:
           sha256 "${SHA256}"
           version "${VERSION}"
           license "Apache-2.0"
-          
+
           depends_on :macos
-          
+
           def install
             bin.install "pastedown"
           end
-          
+
           test do
             system "#{bin}/pastedown", "--version"
           end
         end
         EOF
-        
+
         echo "Updated formula for version ${VERSION} with SHA256 ${SHA256}"
-        
+
     - name: Upload Formula
       uses: actions/upload-artifact@v4
       with:
