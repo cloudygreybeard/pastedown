@@ -23,10 +23,10 @@ chmod +x /usr/local/bin/pastedown
 Install using the Homebrew tap (supports both Intel and Apple Silicon):
 
 ```bash
-brew install cloudygreybeard/pastedown/pastedown
+brew install cloudygreybeard/tap/pastedown
 ```
 
-The Homebrew tap is maintained at [cloudygreybeard/homebrew-pastedown](https://github.com/cloudygreybeard/homebrew-pastedown).
+The Homebrew tap is maintained at [cloudygreybeard/homebrew-tap](https://github.com/cloudygreybeard/homebrew-tap).
 
 ## Basic Usage
 
