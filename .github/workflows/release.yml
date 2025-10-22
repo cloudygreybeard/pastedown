@@ -81,6 +81,9 @@ jobs:
         - Update URL to v$VERSION release
         - Update SHA256 hash for universal binary
         - Support both Intel and Apple Silicon Macs"
+        
+        # Configure git to use the GitHub token for authentication
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/cloudygreybeard/homebrew-pastedown.git
         git push origin main
 
         echo "Updated Homebrew formula for version $VERSION"
