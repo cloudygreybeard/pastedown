@@ -531,7 +531,7 @@ struct CLI {
     }
     
     private static func getVersion() -> String {
-        // Try to get version from git
+        // Try to get version from git (for development builds)
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/usr/bin/git")
         process.arguments = ["describe", "--tags", "--always", "--dirty"]
@@ -547,15 +547,19 @@ struct CLI {
             if process.terminationStatus == 0 {
                 let data = pipe.fileHandleForReading.readDataToEndOfFile()
                 if let version = String(data: data, encoding: .utf8) {
-                    return version.trimmingCharacters(in: .whitespacesAndNewlines)
+                    let gitVersion = version.trimmingCharacters(in: .whitespacesAndNewlines)
+                    // Only use git version if it looks like a proper version
+                    if gitVersion.contains("v") || gitVersion.contains(".") {
+                        return gitVersion
+                    }
                 }
             }
         } catch {
-            // Fall through to default version
+            // Fall through to embedded version
         }
         
-        // Fallback to default version
-        return "0.1.0"
+        // Use embedded version (for release builds)
+        return Version.version
     }
 }
 
