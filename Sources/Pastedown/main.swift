@@ -485,7 +485,7 @@ struct CLI {
             --from TYPE           Force specific source type (html, rtf, text, attributed)
             --priority TYPES      Set priority order (e.g., "html,rtf,text")
             --merge TYPES         Merge multiple types (e.g., "html,text")
-            --separator STRING    Separator for merged content (default: "\n\n")
+            --separator STRING    Separator for merged content (default: "\\n\\n")
             --all                 Show all available conversions
         
         EXAMPLES:
@@ -502,7 +502,7 @@ struct CLI {
             pastedown --merge html,text
             
             # Merge with custom separator
-            pastedown --merge html,text --separator "\n---\n"
+            pastedown --merge html,text --separator "\\n---\\n"
             
             # Show all conversions
             pastedown --all

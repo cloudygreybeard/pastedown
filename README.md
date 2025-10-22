@@ -8,33 +8,25 @@ The tool provides fine-grained control over source selection, content merging, a
 
 ## Installation
 
-### Development Build (Recommended)
+### Binary Download (Recommended)
 
-Since this is a private repository, the easiest way to install is to build from source:
-
-```bash
-# Clone and build
-git clone https://github.com/cloudygreybeard/pastedown.git
-cd pastedown
-make build
-make install
-```
-
-### Homebrew (Local Tap)
-
-For Homebrew installation, you'll need to create a local tap first:
+Download the latest release binary from [GitHub Releases](https://github.com/cloudygreybeard/pastedown/releases). The binary is a universal binary that works on both Intel and Apple Silicon Macs:
 
 ```bash
-# Create a local tap repository
-git clone https://github.com/cloudygreybeard/pastedown.git /opt/homebrew/Library/Taps/cloudygreybeard/homebrew-pastedown
-cd /opt/homebrew/Library/Taps/cloudygreybeard/homebrew-pastedown
-# Copy the formula to the correct location
-cp pastedown.rb Formula/pastedown.rb
-# Install
-brew install pastedown
+# Download and install
+curl -L https://github.com/cloudygreybeard/pastedown/releases/latest/download/pastedown -o /usr/local/bin/pastedown
+chmod +x /usr/local/bin/pastedown
 ```
 
-**Note**: This repository is currently private, so release assets are not publicly accessible. Use the development build method above for installation.
+### Homebrew
+
+Install using the Homebrew tap (supports both Intel and Apple Silicon):
+
+```bash
+brew install cloudygreybeard/pastedown/pastedown
+```
+
+The Homebrew tap is maintained at [cloudygreybeard/homebrew-pastedown](https://github.com/cloudygreybeard/homebrew-pastedown).
 
 ## Basic Usage
 
@@ -174,6 +166,8 @@ cd pastedown
 make build
 make install
 ```
+
+**Note**: Building from source requires Swift 5.9+ and Command Line Tools for Xcode.
 
 ### Development Workflow
 
