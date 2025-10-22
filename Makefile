@@ -19,9 +19,16 @@ SWIFT_TEST_FLAGS :=
 .PHONY: all
 all: build
 
+# Generate version file
+.PHONY: generate-version
+generate-version:
+	@echo "Generating version information..."
+	@mkdir -p Sources/Pastedown
+	@./hack/generate-version.sh Sources/Pastedown/Version.swift
+
 # Build the project
 .PHONY: build
-build:
+build: generate-version
 	@echo "Building pastedown version $(VERSION)..."
 	swift build $(SWIFT_BUILD_FLAGS)
 	@echo "Build complete: $(RELEASE_DIR)/$(BINARY_NAME)"
