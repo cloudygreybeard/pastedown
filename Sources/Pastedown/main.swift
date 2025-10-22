@@ -1,4 +1,5 @@
 import Foundation
+import AppKit
 import PasteboardKit
 import MarkdownGenerator
 
@@ -58,7 +59,11 @@ struct CLI {
         
         switch result {
         case .success(let markdown):
-            print(markdown, terminator: "")
+            if options.paste {
+                writeToPasteboard(markdown)
+            } else {
+                print(markdown, terminator: "")
+            }
         case .failure(let error):
             fprintln("Error: \(error)", to: .stderr)
             exit(1)
@@ -88,6 +93,8 @@ struct CLI {
                 }
             case "--all":
                 options.showAll = true
+            case "--paste", "--copy":
+                options.paste = true
             default:
                 break
             }
@@ -102,6 +109,7 @@ struct CLI {
         var mergeTypes: [String]? = nil
         var separator: String = "\n\n"
         var showAll: Bool = false
+        var paste: Bool = false
     }
     
     enum ConvertResult {
@@ -487,6 +495,7 @@ struct CLI {
             --merge TYPES         Merge multiple types (e.g., "html,text")
             --separator STRING    Separator for merged content (default: "\\n\\n")
             --all                 Show all available conversions
+            --paste, --copy       Put markdown output back into pasteboard
         
         EXAMPLES:
             # Convert pasteboard to Markdown (default priority)
@@ -507,6 +516,9 @@ struct CLI {
             # Show all conversions
             pastedown --all
             
+            # Convert and put back in pasteboard
+            pastedown --paste
+            
             # Inspect pasteboard
             pastedown inspect
             
@@ -523,6 +535,12 @@ struct CLI {
           - Tables
           - Blockquotes
         """)
+    }
+    
+    private static func writeToPasteboard(_ text: String) {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(text, forType: .string)
     }
     
     private static func printVersion() {
