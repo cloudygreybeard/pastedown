@@ -82,8 +82,14 @@ jobs:
         # Calculate SHA256 of the binary
         SHA256=$(shasum -a 256 ./pastedown | cut -d' ' -f1)
 
-        # Clone the homebrew repository
-        git clone https://github.com/cloudygreybeard/homebrew-pastedown.git homebrew-repo
+        # Setup SSH for deploy key authentication
+        mkdir -p ~/.ssh
+        echo "${{ secrets.HOMEBREW_DEPLOY_KEY }}" > ~/.ssh/id_ed25519
+        chmod 600 ~/.ssh/id_ed25519
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+
+        # Clone the homebrew repository using SSH
+        git clone git@github.com:cloudygreybeard/homebrew-pastedown.git homebrew-repo
         cd homebrew-repo
 
         # Update the formula
@@ -101,8 +107,7 @@ jobs:
         - Update SHA256 hash for universal binary
         - Support both Intel and Apple Silicon Macs"
         
-        # Configure git to use the Personal Access Token for authentication
-        git remote set-url origin https://x-access-token:${{ secrets.HOMEBREW_TOKEN }}@github.com/cloudygreybeard/homebrew-pastedown.git
+        # Push using SSH (deploy key authentication)
         git push origin main
 
         echo "Updated Homebrew formula for version $VERSION"
