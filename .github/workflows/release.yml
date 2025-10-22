@@ -63,33 +63,25 @@ jobs:
         # Calculate SHA256 of the binary
         SHA256=$(shasum -a 256 ./pastedown | cut -d' ' -f1)
 
-        # Create updated formula
-        cat > pastedown.rb << EOF
-        class Pastedown < Formula
-          desc "macOS Pasteboard to Markdown"
-          homepage "https://github.com/cloudygreybeard/pastedown"
-          url "https://github.com/cloudygreybeard/pastedown/releases/download/v${VERSION}/pastedown"
-          sha256 "${SHA256}"
-          version "${VERSION}"
-          license "Apache-2.0"
+        # Clone the homebrew repository
+        git clone https://github.com/cloudygreybeard/homebrew-pastedown.git homebrew-repo
+        cd homebrew-repo
 
-          depends_on :macos
+        # Update the formula
+        sed -i '' "s|url \".*\"|url \"https://github.com/cloudygreybeard/pastedown/releases/download/v$VERSION/pastedown\"|" Formula/pastedown.rb
+        sed -i '' "s/sha256 \".*\"/sha256 \"$SHA256\"/" Formula/pastedown.rb
+        sed -i '' "s/version \".*\"/version \"$VERSION\"/" Formula/pastedown.rb
 
-          def install
-            bin.install "pastedown"
-          end
+        # Commit and push the changes
+        git config user.name "GitHub Actions"
+        git config user.email "actions@github.com"
+        git add Formula/pastedown.rb
+        git commit -m "Update pastedown to v$VERSION
 
-          test do
-            system "#{bin}/pastedown", "--version"
-          end
-        end
-        EOF
+        - Update URL to v$VERSION release
+        - Update SHA256 hash for universal binary
+        - Support both Intel and Apple Silicon Macs"
+        git push origin main
 
-        echo "Updated formula for version ${VERSION} with SHA256 ${SHA256}"
-
-    - name: Upload Formula
-      uses: actions/upload-artifact@v4
-      with:
-        name: homebrew-formula
-        path: pastedown.rb
-        retention-days: 30
+        echo "Updated Homebrew formula for version $VERSION"
+        echo "SHA256: ${SHA256}"
