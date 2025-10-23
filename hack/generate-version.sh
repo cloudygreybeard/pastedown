@@ -21,3 +21,4 @@ struct Version {
 EOF
 
 echo "Generated version: $VERSION"
+

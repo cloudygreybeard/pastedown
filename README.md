@@ -31,11 +31,14 @@ chmod +x /usr/local/bin/pastedown
 ## Basic Usage
 
 ```bash
-# Convert pasteboard to Markdown
+# Convert pasteboard to Markdown and copy to clipboard
 pastedown
 
+# Print Markdown to stdout
+pastedown --print
+
 # Save to file
-pastedown > output.md
+pastedown --print > output.md
 
 # Inspect pasteboard contents
 pastedown inspect
@@ -94,10 +97,13 @@ pastedown inspect --output json
 Convert formatted text from web browsers, word processors, or rich text editors:
 
 ```bash
-# Basic conversion (HTML preferred)
+# Basic conversion to clipboard (HTML preferred)
 pastedown
 
-# Force plain text output
+# Print to stdout instead
+pastedown --print
+
+# Force plain text source
 pastedown --from text
 
 # Prefer RTF over HTML
@@ -133,10 +139,18 @@ pastedown --merge html,text --separator "\n\n---\n\n"
 
 ## Output Formats
 
-### Plain Text (Default)
+### Clipboard (Default)
 
 ```bash
+# Convert and copy to clipboard
 pastedown
+```
+
+### Plain Text (stdout)
+
+```bash
+# Print to stdout
+pastedown --print
 pastedown inspect
 ```
 
